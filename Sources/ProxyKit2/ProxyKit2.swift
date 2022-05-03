@@ -1,0 +1,6 @@
+public struct ProxyKit2 {
+    public private(set) var text = "Hello, World!"
+
+    public init() {
+    }
+}
