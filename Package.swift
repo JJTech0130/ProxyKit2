@@ -22,7 +22,7 @@ let package = Package(
         // Targets can depend on other targets in this package, and on products in packages this package depends on.
         .target(
             name: "ProxyKit2",
-            dependencies: [.product(name: "NIO", package: "swift-nio")]),
+            dependencies: [.product(name: "NIO", package: "swift-nio"), .product(name: "NIOHTTP1", package: "swift-nio")]),
         .testTarget(
             name: "ProxyKit2Tests",
             dependencies: ["ProxyKit2"]),
