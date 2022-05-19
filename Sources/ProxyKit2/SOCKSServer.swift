@@ -7,24 +7,25 @@
 
 import Foundation
 import NIO
+import Logging
 
 enum SOCKSServerError: Error {
     case invalidHost
     case invalidPort
 }
 
-class SOCKSServer {
+public class SOCKSServer {
     private let group = MultiThreadedEventLoopGroup(numberOfThreads: System.coreCount)
     
     private var host: String?
     var port: Int?
     
-    init(host: String, port: Int) {
+    public init(host: String, port: Int) {
         self.host = host
         self.port = port
     }
     
-    func start() throws {
+    public func start() throws {
         guard let host = host else {
             throw SOCKSServerError.invalidHost
         }
@@ -41,7 +42,7 @@ class SOCKSServer {
         }
     }
     
-    func stop() {
+    public func stop() {
         do {
             try group.syncShutdownGracefully()
         } catch let error {
@@ -56,7 +57,7 @@ class SOCKSServer {
             .serverChannelOption(ChannelOptions.backlog, value: 256)
             .serverChannelOption(ChannelOptions.socket(SocketOptionLevel(SOL_SOCKET), SO_REUSEADDR), value: 1)
             .childChannelInitializer { channel in
-                channel.pipeline.addHandler(SOCKSHandler())
+                channel.pipeline.addHandler(ConnectHandler(logger: Logger(label: "com.apple.nio-connect-proxy.ConnectHandler")))
             }
     }
 }
